@@ -12,15 +12,9 @@ class Filter(ABC, BaseModel):
 
 
 class ReFilter(Filter):
-    def __init__(
-        self,
-        include: List[str] = [],
-        exclude: List[str] = [],
-        flags: List[Union[re.RegexFlag, int]] = [re.IGNORECASE],
-    ):
-        self.include = include
-        self.exclude = exclude
-        self.flags = flags
+    include: List[str] = []
+    exclude: List[str] = []
+    flags: List[Union[re.RegexFlag, int]] = [re.IGNORECASE]
 
     def filter(self, paths: List[str]) -> List[str]:
         filtered_paths = re_filter(paths, self.include, self.exclude, self.flags)
