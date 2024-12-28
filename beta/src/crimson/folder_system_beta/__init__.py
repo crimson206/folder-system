@@ -12,3 +12,4 @@ search:
 """
 from crimson.folder_system_beta.filter import Filter, FnFilter, ReFilter
 from crimson.folder_system_beta.search import search
+from crimson.folder_system_beta.delete import delete_files
