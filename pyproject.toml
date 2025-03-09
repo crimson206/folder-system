@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "crimson-folder-system"
 version = "0.1.4"
-description = "Your package description."
+description = "A simple yet powerful Python utility for file system operations including searching, filtering, and managing files and directories with pattern matching and content-based filtering capabilities."
 readme = "README.md"
 authors = [
   { name="Sisung Kim", email="sisung.kim1@gmail.com" },

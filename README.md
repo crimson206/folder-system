@@ -1,98 +1,102 @@
-**Template README.md**\
-This file is from the [template repository](https://github.com/crimson206/template/blob/main/README.md).
-Rewrite it for your own package.
+# Crimson Folder System
 
-## Python Package Setup
+A Python library for easy file and folder searching, filtering, and deletion.
 
-### Setup Base
+## Installation
 
-To install required pip modules for `generate_toml.py`, run
-``` bash
-source scripts/setup_base.sh
+```bash
+pip install crimson-folder-system
 ```
 
-### User Setup
+## Features
 
-- go to `generate_toml.py` file, and complete the setup in the `User Setup` session.
+- **File and Folder Search**: Quickly search for files and folders using pattern matching
+- **Various Filtering Options**: Filter using regular expressions (RegEx) or fnmatch patterns
+- **Content Search**: Search and filter based on file contents
+- **Path Processing**: Path slicing and manipulation utilities
+- **File Deletion**: Safe file deletion capabilities
+
+## Usage Examples
+
+### Search for Files and Folders
 
 ```python
-options = Options(
-    # Will you use the discussion session in your repo?
-    discussion=False
+from crimson.folder_system import FnFilter, search, ReFilter
+
+# Search using fnmatch patterns
+results = search(
+    '../', 
+    filter_obj=FnFilter(
+        include=['*src*'],
+        exclude=['*__pycache__*', '*.git*', '*egg-info*']
+    ), 
+    targets=['folder', 'path']
 )
 
-# Define the general information of your package
-kwargs = Kwargs(
-    name_space="None",
-    module_name="None",
-    description="None",
+# Search using regular expressions
+results = search(
+    '../',
+    filter_obj=ReFilter(
+        include=['.ipynb'],
+        exclude=['.git', '__pycache__', 'egg-info']
+    ), 
+    targets=['path']
 )
 ```
 
-If you wrote all the information, run
-```
-python generate_toml.py
-```
+### Search by File Content
 
-#### Template
+```python
+from crimson.folder_system.search import filter_files_by_content
+from crimson.folder_system.filter import ReFilter
 
-If you want to understand the generation process, check the `template` variable in `generate_toml.py`.
-
-### Setup Env
-
-#### Prerequisite
-
-Finish [User Setup](#user-setup) first.
-Of course, conda command must be available.
-
-#### Setup Env
-
-Run
-``` bash
-source scripts/setup_env.sh
+# Find files containing specific content
+results = filter_files_by_content(
+    base_root="../src",
+    path_filter=ReFilter(exclude=['egg-info']),
+    content_filter=ReFilter(include=["class Filter"])
+)
 ```
 
-steps
-- create an conda environment named as your $MODULE_NAME
-- activate the environment.
-- install requirements.txt
+### Path Slicing
 
-#### Generate Private Env
-Generate a private repository in this repo.
-I recommend you to write all the unstructured codes in this repo.
+```python
+from crimson.folder_system.path import get_sliced_path
 
-``` bash
-source scripts/generate_dev_repo.sh
+path = "/home/crimson/manager/crimson/folder-system/example/path.ipynb"
+sliced_path = get_sliced_path(path, 2, -2)  # 'crimson/manager/crimson/folder-system'
 ```
 
-It will ask you the name of your repo, and then, generate a repo named f'{your_repo_name}-dev'.
+### File Deletion
 
-**Usage Tip**
+```python
+from crimson.folder_system import delete_files
 
-If you wrote your codes in a wrong branch,
-- backup the files to the dev repo
-- remove changes in your main(not main branch) repo
-- move to your correct branch
-- place back the backup codes
+result = delete_files(file_paths)
+# Result: {'success': [...successful deletions...], 'failed': {...failed deletions with reasons...}}
+```
 
+## Filter Types
 
-## Workflows
+1. **FnFilter**: fnmatch pattern-based filtering (supports wildcards)
+2. **ReFilter**: Regular expression-based filtering
 
-I currently setup test and release workflows.
+## Creating Custom Filters
 
-**Test**
+```python
+from crimson.folder_system.filter import Filter
+from typing import List
 
-If you make a PR with the patterns [ main, develop, 'release/*', 'feature/*' ],
+class MyCustomFilter(Filter):
+    def filter(self, paths: List[str]) -> List[str]:
+        # Implement your own filtering logic
+        return [path for path in paths if your_condition(path)]
+```
 
-It will perform your unittest in ["3.9", "3.10", "3.11"]
+## License
 
-**Release**
+MIT
 
-required secret : PYPI_API_TOKEN
+## Contact
 
-I usually make PRs only when I start release branches.
-release workflow is not conducted automatically. If you think your branch is ready to be published, 
-
-- go to https://github.com/{github_id}/{repo_name}/actions/workflows/release.yaml
-- find the button, 'Run workflow'
-- select the branch to publish. In my case, release/x.x.x
+GitHub: [https://github.com/crimson206/folder-system](https://github.com/crimson206/folder-system)
